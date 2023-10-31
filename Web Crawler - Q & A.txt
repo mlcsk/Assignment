@@ -1,0 +1,37 @@
+Advanced Web Crawler - 
+• How would you scale a high load of crawl POST requests? 
+• How would you scale a high load of GET requests? 
+• How would you solve deduplication when you scale out, so you do not visit an URL more than once? 
+• What will happen if you do not have the maxDepth parameter and would you make any changes to 
+your design/implementation? 
+• How would you detect loops? 
+• How would you store the data? 
+
+Explanation for these points - 
+
+1. How would you scale a high load of crawl POST requests --
+Code level changes can implement 
+        Execution Process of Parallel Foreach loop
+	Parallel.Foreach(li, x => {x.id,x.name etc... });
+	Note- Please don't use the Parallel foreach loop while  
+We can distribute the incoming requests among multiple instances of our application.
+using a load balancer. 
+Use horizontal scaling by adding more servers to handle the load.
+
+2 . How would you scale a high load of GET requests:
+Same points as in point 1
+
+3. How would you solve deduplication when you scale out, so you do not visit an URL more than once.
+We can apply filter logic to overcome the deduplication using linq like distinct.
+We can also use database to store the visited urls and there we can implement not to store duplicates
+
+4. What will happen if you do not have the maxDepth parameter and would you make any changes to 
+your design/implementation?
+We can run in never ending/ infinite loops if we dont have max depth.
+if its not there, we would need to write any other conditions which restricts the number of webpages
+
+5. How would you detect loops?
+We can store visited urls in the logs or the database, there we can check for duplicates
+
+6. How would you store the data?
+We can store the data in the logs in a text file, or in the database. Database can be relational or NoSQL.
