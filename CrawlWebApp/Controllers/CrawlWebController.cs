@@ -20,14 +20,14 @@ namespace CrawlWebApp.Controllers
 
         [HttpPost]
         [Route("crawl")]
-        public async Task<IActionResult> CrawlPages([FromBody] CrawlRequest request)
+        public async Task<IActionResult> CrawlSave([FromBody] CrawlRequest request)
         {
             int crawlId = _IdCounter++;
             var crawlResult = new CrawlResponse(crawlId);
 
             foreach (string url in request.Urls)
             {
-                await CrawlUrl(crawlResult, url, request.MaxDepth);
+                await CrawlUrls(crawlResult, url, request.MaxDepth);
             }
 
             _crawlResponses.TryAdd(crawlId, crawlResult);
@@ -56,11 +56,11 @@ namespace CrawlWebApp.Controllers
         {
             var result = new List<CrawlPageRelation>();
             var visitedUrls = new HashSet<string>();
-            GetPageRelationsRecursive(result, visitedUrls, url, maxDepth);
+            PageRelations(result, visitedUrls, url, maxDepth);
             return Ok(result);
         }
 
-        private async Task CrawlUrl(CrawlResponse crawlResponse, string url, int maxDepth)
+        private async Task CrawlUrls(CrawlResponse crawlResponse, string url, int maxDepth)
         {
             if (maxDepth < 0)
             {
@@ -75,14 +75,14 @@ namespace CrawlWebApp.Controllers
                 {
                     var httpClient = _httpClientFactory.CreateClient();
                     var html = await httpClient.GetStringAsync(url);
-                    var doc = new HtmlDocument();
-                    doc.LoadHtml(html);
+                    var document = new HtmlDocument();
+                    document.LoadHtml(html);
 
-                    string pageTitle = doc.DocumentNode.SelectSingleNode("//title").InnerHtml;
+                    string pageTitle = document.DocumentNode.SelectSingleNode("//title").InnerHtml;
 
                     crawlResponse.AddPage(url, pageTitle);
 
-                    var links = doc.DocumentNode.SelectNodes("//a[@href]");
+                    var links = document.DocumentNode.SelectNodes("//a[@href]");
                     if (links != null)
                     {
                         foreach (var link in links)
@@ -116,7 +116,7 @@ namespace CrawlWebApp.Controllers
             }
         }
 
-        private void GetPageRelationsRecursive(List<CrawlPageRelation> response, HashSet<string> visitedUrls, string url, int maxDepth)
+        private void PageRelations(List<CrawlPageRelation> response, HashSet<string> visitedUrls, string url, int maxDepth)
         {
             if (maxDepth < 0 || visitedUrls.Contains(url))
             {
