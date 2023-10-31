@@ -8,7 +8,6 @@ your design/implementation?
 • How would you store the data? 
 
 Explanation for above points - 
-
 1. How would you scale a high load of crawl POST requests --
 Code level changes can implement 
         Execution Process of Parallel Foreach loop
@@ -35,3 +34,4 @@ We can store visited urls in the logs or the database, there we can check for du
 
 6. How would you store the data?
 Based on requirements, we can store the data in the logs in a text file,or in chache or in the database. Database can be relational or NoSQL.
+
