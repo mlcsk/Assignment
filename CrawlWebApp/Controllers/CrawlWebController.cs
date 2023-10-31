@@ -122,7 +122,7 @@ namespace CrawlWebApp.Controllers
             }
 
             visitedUrls.Add(url);
-            Dictionary<string, string> linkedurlstitles = new Dictionary<string, string>();
+            Dictionary<string, string> linkedUrlsTitles = new Dictionary<string, string>();
             foreach (var crawlResultPair in crawlResponses)
             {
                 var crawlResponse = crawlResultPair.Value;
@@ -133,11 +133,11 @@ namespace CrawlWebApp.Controllers
                     var document = new HtmlDocument();
                     document.LoadHtml(html);
                     string pageTitle = document.DocumentNode.SelectSingleNode("//title").InnerHtml;
-                    linkedurlstitles.Add(linkedurl, pageTitle);
+                    linkedUrlsTitles.Add(linkedurl, pageTitle);
                 }
                 if (crawlResponse.VisitedUrls.Contains(url))
                 {
-                    response.Add(new CrawlPageRelation(url, crawlResponse.PageTitles[url], crawlResponse.LinkedUrls.Count, linkedurlstitles));
+                    response.Add(new CrawlPageRelation(url, crawlResponse.PageTitles[url], crawlResponse.LinkedUrls.Count, linkedUrlsTitles));
                     break;
 
                 }
