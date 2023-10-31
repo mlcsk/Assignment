@@ -2,11 +2,6 @@
 {
     public class CrawlResponse
     {
-        public int CrawlId { get; }
-        public HashSet<string> VisitedUrls { get; }
-        public Dictionary<string, string> PageTitles { get; }
-        public HashSet<string> LinkedUrls { get; }
-
 
         public CrawlResponse(int crawlId)
         {
@@ -15,6 +10,11 @@
             PageTitles = new Dictionary<string, string>();
             LinkedUrls = new HashSet<string>();
         }
+
+        public int CrawlId { get; }
+        public HashSet<string> VisitedUrls { get; }
+        public Dictionary<string, string> PageTitles { get; }
+        public HashSet<string> LinkedUrls { get; }
 
         public void AddPage(string url, string pageTitle)
         {

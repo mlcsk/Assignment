@@ -10,8 +10,8 @@ namespace CrawlWebApp.Controllers
     public class CrawlWebController : ControllerBase
     {
 
-        private static int _IdCounter = 1;
-        private static readonly ConcurrentDictionary<int, CrawlResponse> _crawlResponses = new ConcurrentDictionary<int, CrawlResponse>();
+        private static int idCounter = 1;
+        private static readonly ConcurrentDictionary<int, CrawlResponse> crawlResponses = new ConcurrentDictionary<int, CrawlResponse>();
         private readonly IHttpClientFactory _httpClientFactory;
         public CrawlWebController(IHttpClientFactory httpClientFactory)
         {
@@ -19,10 +19,10 @@ namespace CrawlWebApp.Controllers
         }
 
         [HttpPost]
-        [Route("crawl")]
+        [Route("crawlsave")]
         public async Task<IActionResult> CrawlSave([FromBody] CrawlRequest request)
         {
-            int crawlId = _IdCounter++;
+            int crawlId = idCounter++;
             var crawlResult = new CrawlResponse(crawlId);
 
             foreach (string url in request.Urls)
@@ -30,7 +30,7 @@ namespace CrawlWebApp.Controllers
                 await CrawlUrls(crawlResult, url, request.MaxDepth);
             }
 
-            _crawlResponses.TryAdd(crawlId, crawlResult);
+            crawlResponses.TryAdd(crawlId, crawlResult);
 
             return Ok(new { CrawlId = crawlId });
         }
@@ -40,7 +40,7 @@ namespace CrawlWebApp.Controllers
         [Route("crawlresponse/{crawlId}")]
         public IActionResult GetCrawlResult(int crawlId)
         {
-            if (_crawlResponses.TryGetValue(crawlId, out var crawlResult))
+            if (crawlResponses.TryGetValue(crawlId, out var crawlResult))
             {
                 return Ok(crawlResult);
             }
@@ -125,7 +125,7 @@ namespace CrawlWebApp.Controllers
 
             visitedUrls.Add(url);
 
-            foreach (var crawlResultPair in _crawlResponses)
+            foreach (var crawlResultPair in crawlResponses)
             {
                 var crawlResponse = crawlResultPair.Value;
                 if (crawlResponse.VisitedUrls.Contains(url))
