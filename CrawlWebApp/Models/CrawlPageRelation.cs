@@ -2,18 +2,18 @@
 {
     public class CrawlPageRelation
     {
-        public CrawlPageRelation(string url, string title, int linkedurlcount, HashSet<string> linkedurls)
+        public CrawlPageRelation(string url, string title, int linkedurlcount, Dictionary<string, string> linkedurlstitles)
         {
             Url = url;
             Title = title;
             LinkedURLSCount = linkedurlcount;
-            LinkedURLs = linkedurls;
+            LinkedUrlsTitles = linkedurlstitles;
         }
 
         public string Url { get; set; }
         public string Title { get; set; }
         public int LinkedURLSCount { get; set; }
-        public HashSet<string> LinkedURLs { get; set; }
+        public Dictionary<string, string> LinkedUrlsTitles { get; set; }
        
     }
 }

@@ -52,11 +52,11 @@ namespace CrawlWebApp.Controllers
 
         [HttpGet]
         [Route("pagerelations")]
-        public IActionResult GetPageRelations(string url, int maxDepth)
+        public async Task<IActionResult> GetPageRelations(string url, int maxDepth)
         {
             var result = new List<CrawlPageRelation>();
             var visitedUrls = new HashSet<string>();
-            PageRelations(result, visitedUrls, url, maxDepth);
+            await PageRelations(result, visitedUrls, url, maxDepth);
             return Ok(result);
         }
 
@@ -79,9 +79,7 @@ namespace CrawlWebApp.Controllers
                     document.LoadHtml(html);
 
                     string pageTitle = document.DocumentNode.SelectSingleNode("//title").InnerHtml;
-
                     crawlResponse.AddPage(url, pageTitle);
-
                     var links = document.DocumentNode.SelectNodes("//a[@href]");
                     if (links != null)
                     {
@@ -116,7 +114,7 @@ namespace CrawlWebApp.Controllers
             }
         }
 
-        private void PageRelations(List<CrawlPageRelation> response, HashSet<string> visitedUrls, string url, int maxDepth)
+        private async Task PageRelations(List<CrawlPageRelation> response, HashSet<string> visitedUrls, string url, int maxDepth)
         {
             if (maxDepth < 0 || visitedUrls.Contains(url))
             {
@@ -124,13 +122,22 @@ namespace CrawlWebApp.Controllers
             }
 
             visitedUrls.Add(url);
-
+            Dictionary<string, string> linkedurlstitles = new Dictionary<string, string>();
             foreach (var crawlResultPair in crawlResponses)
             {
                 var crawlResponse = crawlResultPair.Value;
+                foreach (var linkedurl in crawlResponse.LinkedUrls)
+                {
+                    var httpClient = _httpClientFactory.CreateClient();
+                    var html = await httpClient.GetStringAsync(linkedurl);
+                    var document = new HtmlDocument();
+                    document.LoadHtml(html);
+                    string pageTitle = document.DocumentNode.SelectSingleNode("//title").InnerHtml;
+                    linkedurlstitles.Add(linkedurl, pageTitle);
+                }
                 if (crawlResponse.VisitedUrls.Contains(url))
                 {
-                    response.Add(new CrawlPageRelation(url, crawlResponse.PageTitles[url], crawlResponse.LinkedUrls.Count, crawlResponse.LinkedUrls));
+                    response.Add(new CrawlPageRelation(url, crawlResponse.PageTitles[url], crawlResponse.LinkedUrls.Count, linkedurlstitles));
                     break;
 
                 }
