@@ -1,4 +1,4 @@
-Advanced Web Crawler - 
+Web Crawler - 
 • How would you scale a high load of crawl POST requests? 
 • How would you scale a high load of GET requests? 
 • How would you solve deduplication when you scale out, so you do not visit an URL more than once? 
@@ -7,7 +7,7 @@ your design/implementation?
 • How would you detect loops? 
 • How would you store the data? 
 
-Explanation for these points - 
+Explanation for above points - 
 
 1. How would you scale a high load of crawl POST requests --
 Code level changes can implement 
@@ -34,4 +34,4 @@ if its not there, we would need to write any other conditions which restricts th
 We can store visited urls in the logs or the database, there we can check for duplicates
 
 6. How would you store the data?
-We can store the data in the logs in a text file, or in the database. Database can be relational or NoSQL.
+Based on requirements, we can store the data in the logs in a text file,or in chache or in the database. Database can be relational or NoSQL.
