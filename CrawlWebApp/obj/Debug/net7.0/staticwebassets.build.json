@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "48CoPFgAGZglaEJgAVrFwAQguIajkZBBCUuZMKC4k8g=",
+  "Source": "CrawlWebApp",
+  "BasePath": "_content/CrawlWebApp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
